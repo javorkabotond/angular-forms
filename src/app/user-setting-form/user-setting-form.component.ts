@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserSetting} from "../data/user-setting";
 import {NgForm} from "@angular/forms";
+import {DataService} from "../data/data.service";
 
 @Component({
   selector: 'app-user-setting-form',
@@ -17,13 +18,30 @@ export class UserSettingFormComponent implements OnInit {
   };
 
   userSettings: UserSetting = {...this.originalUserSettings}
-  constructor() { }
+  postError: boolean = false;
+  postErrorMesagge: string = ''
+  constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
   }
 
+  onHttpError(errorResponse: any) {
+    console.log('Error: ', errorResponse);
+    this.postError = true;
+    this.postErrorMesagge = errorResponse.error.errorMessage;
+  }
+
   onSubmit(form: NgForm): void{
-    console.log('in onSubmit: ', form.valid)
+    console.log('in onSubmit: ', form.valid);
+    if(form.valid) {
+      this.dataService.postUserSettingsForm(this.userSettings).subscribe(
+        result => console.log('Success: ', result),
+        error => console.log('Error: ', error)
+      );
+    } else {
+      this.postError = true;
+      this.postErrorMesagge = "Please fix the above errors!";
+    }
   }
 
 }

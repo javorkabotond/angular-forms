@@ -67,6 +67,9 @@
       <input type="date" id="testing" name="testing" class="form-control" ngModel/>
     </div>
 
+    <div [hidden]="!postError" class="alert alert-danger">
+      {{postErrorMesagge}}
+    </div>
     <button class="btn btn-primary">Send</button>
   </form>
 </div>
